@@ -146,7 +146,7 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return new SequentialCommandGroup(
             drivetrain.applyRequest(() ->
-            drive.withVelocityX(-.5*MaxSpeed)
+            drive.withVelocityX(.25*MaxSpeed)
             .withVelocityY(0)
             .withRotationalRate(0)).withTimeout(1.2),
             drivetrain.applyRequest(() ->
