@@ -26,6 +26,10 @@ public class CommandCoralPivot implements Subsystem{
             });
     }
 
+    public Double getPosition() {
+        return PivotMotor.getPosition().getValueAsDouble();
+    }
+
     /* Set point commands */
 
     public Command setPosition(double Position){

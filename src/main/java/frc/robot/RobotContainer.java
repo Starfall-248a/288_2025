@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.CoralPivotConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.generated.TunerConstants;
@@ -130,6 +131,7 @@ public class RobotContainer {
 
         operator.triangle().whileTrue(elevator.setPosition(elevator.getElevatorPosition() + .25));
         operator.cross().whileTrue(elevator.setPosition(elevator.getElevatorPosition() - .25));
+        operator.circle().whileTrue(Commands.run(() -> elevator.resetElevatorEncoder()));
 
         operator.L2().whileTrue(Commands.run(() -> coralPivot.PivotMotor.set(0.45)));
         operator.L2().onFalse(Commands.run(() -> coralPivot.PivotMotor.set(0.0)));
@@ -142,7 +144,15 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
+        return new SequentialCommandGroup(
+            drivetrain.applyRequest(() ->
+            drive.withVelocityX(-.25*MaxSpeed)
+            .withVelocityY(0)
+            .withRotationalRate(0)).withTimeout(1.2),
+            drivetrain.applyRequest(() ->
+            drive.withVelocityX(0)
+            .withVelocityY(0)
+            .withRotationalRate(0)).withTimeout(10));
     }
 
     private Command moveManipulator(double elevatorPosition, double armPosition) {

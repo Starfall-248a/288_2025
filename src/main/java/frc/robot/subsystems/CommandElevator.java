@@ -39,6 +39,10 @@ public class CommandElevator implements Subsystem {
         return elevatorEncoder.getDistance();
     }
 
+    public void resetElevatorEncoder() {
+        elevatorEncoder.reset();
+    }
+
     public Command setGravity() {
         return run(() -> {
             elevator.set(.025);

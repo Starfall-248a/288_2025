@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.Timer;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,12 +19,15 @@ public class Robot extends TimedRobot {
   private final RobotContainer m_robotContainer;
 
   private final TalonFX pivot = new TalonFX(13);
+
+  Timer timer;
   
   
 
   public Robot() {
     m_robotContainer = new RobotContainer();
 
+    timer = new Timer();
     
   }
 
@@ -42,15 +47,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    timer.start();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    if (m_autonomousCommand != null) m_autonomousCommand.schedule();
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+
+  }
 
   @Override
   public void autonomousExit() {}
