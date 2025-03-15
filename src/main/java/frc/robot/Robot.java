@@ -55,7 +55,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-
+    if(timer.get() >= 1 && timer.get() <= 1.5){
+      pivot.set(0.5);
+    } else {
+      pivot.set(0);
+    }
   }
 
   @Override
