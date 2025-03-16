@@ -29,6 +29,7 @@ import frc.robot.subsystems.CommandCoralPivot;
 import frc.robot.subsystems.CommandElevator;
 import frc.robot.subsystems.CommandHang;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CommandAlgae;
 
 public class RobotContainer {
 
@@ -60,6 +61,7 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final CommandCoralPivot coralPivot = new CommandCoralPivot();
+    public final CommandAlgae algae = new CommandAlgae();
     public final CommandElevator elevator = new CommandElevator();
     public final CommandHang hang = new CommandHang();
 
@@ -89,7 +91,7 @@ public class RobotContainer {
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() -> 
                 drive.withVelocityX(-Driver.getLeftY() * MaxSpeed * slowSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-Driver.getLeftX() * MaxSpeed * slowSpeed) // Drive left with negative X (left)
+                    .withVelocityY(-Driver.getLeftX() * MaxSpeed * slowSpeed * 0.4) // Drive left with negative X (left)
                     .withRotationalRate(-Driver.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
@@ -107,10 +109,14 @@ public class RobotContainer {
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        Driver.share().and(Driver.triangle()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        Driver.share().and(Driver.square()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        Driver.options().and(Driver.triangle()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        Driver.options().and(Driver.square()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // Driver.triangle().whileTrue(
+        //     drivetrain.applyRequest(() -> point.withModuleDirection(new Rotation2d(-1, 0)))
+        //     );
+
+        
+        // Driver.share().and(Driver.square()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // Driver.options().and(Driver.triangle()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // Driver.options().and(Driver.square()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on left bumper press
         Driver.R1().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
@@ -127,7 +133,7 @@ public class RobotContainer {
         operator.povUp().onTrue(Commands.parallel(elevator.setPosition(ElevatorConstants.kT4Position)));
         operator.povDown().onTrue(Commands.parallel(elevator.setPosition(ElevatorConstants.kStowPosition)));
         operator.povLeft().onTrue(Commands.parallel(elevator.setPosition(ElevatorConstants.kT3Position)));
-        operator.povRight().onTrue(Commands.parallel(elevator.setPosition(ElevatorConstants.kLoadingPosition)));
+        operator.povRight().onTrue(Commands.sequence(elevator.setPosition(ElevatorConstants.kLoadingPosition)));
 
         operator.triangle().whileTrue(elevator.setPosition(elevator.getElevatorPosition() + .25));
         operator.cross().whileTrue(elevator.setPosition(elevator.getElevatorPosition() - .25));
@@ -138,11 +144,24 @@ public class RobotContainer {
         operator.R2().whileTrue(Commands.run(() -> coralPivot.PivotMotor.set(-0.45)));
         operator.R2().onFalse(Commands.run(() -> coralPivot.PivotMotor.set(0.0)));
 
+        Driver.L2().whileTrue(algae.down());
+        Driver.R2().whileTrue(algae.up());
+        Driver.L2().onFalse(algae.stopWrist());
+        Driver.R2().onFalse(algae.stopWrist());
+
+        Driver.square().whileTrue(algae.intake());
+        Driver.square().onFalse(algae.stopIntake());
+        Driver.cross().whileTrue(algae.outtake());
+        Driver.cross().onFalse(algae.stopIntake());
+
+
         // operator.circle().whileTrue(Commands.run(() -> elevator.))
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
+    // Red = -.25
+    // Blue = .25
     public Command getAutonomousCommand() {
         return new SequentialCommandGroup(
             drivetrain.applyRequest(() ->
