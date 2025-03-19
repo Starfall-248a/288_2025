@@ -174,17 +174,17 @@ public class RobotContainer {
             .withRotationalRate(0)).withTimeout(10));
     }
 
-    private Command moveManipulator(double elevatorPosition, double armPosition) {
-        return Commands.either(
-            Commands.sequence(
-                elevator.setPosition(elevatorPosition),
-                coralPivot.setPosition(armPosition)
-            ),
-            Commands.parallel(
-                elevator.setPosition(elevatorPosition),
-                coralPivot.setPosition(armPosition)
-            ),
-            () -> elevator.isSafe()
-        );
-    }
+    // private Command moveManipulator(double elevatorPosition, double armPosition) {
+    //     return Commands.either(
+    //         Commands.sequence(
+    //             elevator.setPosition(elevatorPosition),
+    //             coralPivot.setPosition(armPosition)
+    //         ),
+    //         Commands.parallel(
+    //             elevator.setPosition(elevatorPosition),
+    //             coralPivot.setPosition(armPosition)
+    //         ),
+    //         () -> elevator.isSafe()
+    //     );
+    // }
 }

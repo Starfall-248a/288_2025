@@ -17,7 +17,7 @@ public class ElevatorConstants {
     public static final double kStowPosition = 0;
     public static final double kSafePosition = 8000;
     public static final double kLoadingPosition = 12000;
-    public static final double kStabPosition = 1500;
+    public static final double kStabPosition = 1000;
     public static final double kT2Position = 11000;
     public static final double kT3Position = 10000;
     public static final double kT4Position = 21500;
