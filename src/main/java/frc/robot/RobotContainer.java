@@ -97,7 +97,7 @@ public class RobotContainer {
         );
 
         elevator.setDefaultCommand(elevator.setGravity());
-        coralPivot.setDefaultCommand(coralPivot.setBrake());
+        // coralPivot.setDefaultCommand(coralPivot.setBrake());
 
         Driver.R2().onTrue(new InstantCommand(() -> slowSpeed = .25));
         Driver.R2().onFalse(new InstantCommand(() -> slowSpeed = 1));
@@ -165,14 +165,14 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return new SequentialCommandGroup(
             drivetrain.applyRequest(() ->
-            drive.withVelocityX(.25*MaxSpeed)
+            drive.withVelocityX(-.25*MaxSpeed)
             .withVelocityY(0)
             .withRotationalRate(0)).withTimeout(1.2),
             drivetrain.applyRequest(() ->
             drive.withVelocityX(0)
             .withVelocityY(0)
             .withRotationalRate(0)).withTimeout(10));
-    }
+    } 
 
     // private Command moveManipulator(double elevatorPosition, double armPosition) {
     //     return Commands.either(

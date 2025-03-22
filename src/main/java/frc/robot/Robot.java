@@ -11,23 +11,15 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj.Timer;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.CommandCoralPivot;
-import frc.robot.subsystems.CommandElevator;
-import frc.robot.Constants.CoralPivotConstants;
-import frc.robot.Constants.ElevatorConstants;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
 
-  private final TalonFX pivot;
-
-  private static SparkMax elevator;
 
   Timer timer;
   
@@ -35,9 +27,6 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-
-    elevator = new SparkMax(14, MotorType.kBrushless);
-    pivot = new TalonFX(13);
 
     timer = new Timer();
     
@@ -72,8 +61,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    if(timer.get() >= .5 && timer.get() < .95) pivot.set(.5);
-    if(timer.get() > 0 && timer.get() < .5) elevator.set(.5);
   }
 
   @Override
@@ -89,8 +76,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putString("Pivot Position", String.valueOf(pivot.getPosition().getValueAsDouble()));
-    SmartDashboard.putString("Elevator Position", String.valueOf(m_robotContainer.elevator.getElevatorPosition()));
+    // SmartDashboard.putString("Pivot Position", String.valueOf(pivot.getPosition().getValueAsDouble()));
+    // SmartDashboard.putString("Elevator Position", String.valueOf(m_robotContainer.elevator.getElevatorPosition()));
   }
 
   @Override
