@@ -6,7 +6,7 @@ public class ElevatorConstants {
     public static final double kElevatorI = 1.5;
     public static final double kElevatorD = 4;
 
-    public static final double kElevatorTolerance = 75;
+    public static final double kElevatorTolerance = 20;
 
     public static final double kFeedForwardS = (0.95 - 0.2)/2*0.8;   /* kG too high - kG too low / 2  0.95, 0.2 */
     public static final double kFeedForwardG = (0.95 + 0.2)/2;  /* kG too high + kG too low / 2 */    // calculated value 0.6

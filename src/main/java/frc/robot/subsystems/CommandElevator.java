@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
 public class CommandElevator implements Subsystem {
-    private static SparkMax elevator = new SparkMax(14, MotorType.kBrushless);
-    private final Encoder elevatorEncoder = new Encoder(0, 1, true, Encoder.EncodingType.k2X); // Encoder for the elevator
+    public static SparkMax elevatorMotor = new SparkMax(14, MotorType.kBrushless);
+    private static final Encoder elevatorEncoder = new Encoder(0, 1, true, Encoder.EncodingType.k2X); // Encoder for the elevator
 
     private static final PIDController elevatorPID = new PIDController(
         ElevatorConstants.kElevatorP, //kp
@@ -29,6 +29,7 @@ public class CommandElevator implements Subsystem {
         elevatorPID.setTolerance(ElevatorConstants.kElevatorTolerance); // Set the tolerance for the PID controller
         elevatorEncoder.reset();
         elevatorPID.reset();
+
     }
 
     public boolean isSafe() { //detect weather or not the elevator is above the safe position
@@ -51,7 +52,7 @@ public class CommandElevator implements Subsystem {
 
     public Command setGravity() {
         return run(() -> {
-            elevator.set(.025);
+            elevatorMotor.set(.025);
         });
     }
 
@@ -59,7 +60,7 @@ public class CommandElevator implements Subsystem {
 
     public Command setPosition(double position) {
         return run(() -> {
-            elevator.set(MathUtil.clamp(elevatorPID.calculate(elevatorEncoder.getDistance(), position), -0.9, 0.9));
+            elevatorMotor.set(MathUtil.clamp(elevatorPID.calculate(elevatorEncoder.getDistance(), position), -0.9, 0.9));
         }).until(() -> elevatorPID.atSetpoint());
     }
 
